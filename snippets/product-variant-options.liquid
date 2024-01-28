@@ -52,7 +52,7 @@
     elsif value.swatch.color
       assign swatch_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
     else
-      assign swatch_value = nil
+      assign swatch_value = null
     endif
   -%}
 
@@ -97,8 +97,15 @@
       {% endif %}
     >
     <label for="{{ input_id }}">
-      {{ value -}}
-      {{ label_unavailable }}
+      {% if option.name == 'Color' %}
+        {% assign matchingVariant = product.variants | where: 'option1', value | first %}
+        {% if matchingVariant.image %}
+          <img name="{{ value }}" src="{{ matchingVariant.image | image_url: width: 40 }}">
+        {% endif %}
+      {% else %}
+        {{ value -}}
+        {{ label_unavailable }}
+      {% endif %}
     </label>
   {%- elsif picker_type == 'dropdown' or picker_type == 'swatch_dropdown' -%}
     <option
